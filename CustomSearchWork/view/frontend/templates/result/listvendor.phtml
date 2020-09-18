@@ -1,0 +1,68 @@
+<?php $vendorCollection = $block->getLoadedVendorCollection(); ?>
+<?php $helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image'); ?>
+<?php if ($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
+    <?php if (!$block->getResultCount()) : ?>
+        <div class="message notice">
+            <div>
+                <?= $block->escapeHtml($block->getNoResultText() ? $block->getNoResultText() : __('Your search returned no results.')) ?>
+                <?= /* @noEscape */ $block->getAdditionalHtml() ?>
+                <?php if ($messages = $block->getNoteMessages()) : ?>
+                    <?php foreach ($messages as $message) : ?>
+                        <br /><?= /* @noEscape */ $message ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="vendor_list_page">
+            <div class="products_products_grid">
+                    <?php // Grid Mode ?>
+                    <?php $_collectionSize = $vendorCollection->count(); ?>
+                    <?php $_columnCount = $block->getColumnCount(); ?>
+                    <?php
+                    // Vendor Logo
+                    $width = (int)$helper->getStoreConfig('ced_vshops/general/grid_image_width', $block->getCurrentStoreId());
+                    $height = (int)$helper->getStoreConfig('ced_vshops/general/grid_image_height', $block->getCurrentStoreId());
+                    $width = $width ? $width : 135;
+                    $height = $height ? $height : 135;
+                    ?>
+                    <ul class="products_grid products_grid__max-<?= $_columnCount; ?>_col csmarketplace_vendors_grid">
+                        <?php $i=0; foreach ($vendorCollection as $vendor): ?>
+                            <?php if(!$helper->canShow($vendor)) continue; ?>
+                            <?php $vendorNameStripped = $block->stripTags($vendor->getName(), null, true); ?>
+                            <?php $i++; ?>
+                            <li class="item_<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                                <div class="shop_grid_list_wrap">
+                                    <?php if ($vendor->getData('company_logo')) { ?>
+                                        <a href="<?= $vendor->getVendorShopUrl() ?>" title="<?= $block->stripTags($vendor->getPublicName(), null, true) ?>" class="vendor_logo_image"><img src="<?= $helper->getResizeImage($vendor->getData('company_logo'), 'logo', $width, $height); ?>" alt="<?= $block->stripTags($vendor->getPublicName(), null, true) ?>" /></a>
+                                    <?php } else { ?>
+                                        <a href="<?= $vendor->getVendorShopUrl() ?>" title="<?= $block->stripTags($vendor->getPublicName(), null, true) ?>" class=" vendor_logo_image"><img src="<?= $helper->getResizeImage($vendor->getData('company_logo'), 'logo', $width, $height); ?>" alt="<?= $block->stripTags($vendor->getPublicName(), null, true) ?>" /></a>
+                                    <?php } ?>
+                                    <div class="shop_details_grid">
+                                        <h2 class="product-name csmarketplace-vendor-name">
+                                            <a href="<?= $vendor->getVendorShopUrl() ?>" title="<?= $block->escapeHtml(__('Go to Shop')) ?>">
+                                                <?= $vendor->getPublicName() ?>
+                                            </a>
+                                        </h2>
+                                        <p class="description std">
+                                            <?= $vendor->getAbout(); ?>
+                                        </p>
+                                        <div class="review-wrapper">
+                                            <?= $block->getLayout()->createBlock(\Ced\CsVendorReview\Block\Vshops\View::class)->setData(['vendordata'=>$vendor,'list'=>true])->setTemplate("Ced_CustomSearchWork::vshops/rating.phtml")->toHtml(); ?>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </li>
+                        <?php endforeach ?>
+                       
+                    </ul>
+                
+            </div>
+            <div style="clear: both;"></div>
+            <div class="page_limiter">
+                <?= $block->getCustomPagerHtml() ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php } ?>

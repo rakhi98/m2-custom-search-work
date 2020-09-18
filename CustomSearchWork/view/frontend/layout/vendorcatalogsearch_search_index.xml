@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
+        <css src="Ced_CsMarketplace::css/shoppage.css" />
+        <css src="CustomSearchWork::css/bootstrap.css" />
+        <css src="Ced_CustomSearchWork::css/all.css" />
+        <css src="Ced_CustomSearchWork::css/custom.css" />
+        <link src="Ced_CustomSearchWork::js/product/addtocart.js"/>
+    </head>
+    <body>
+        <attribute name="class" value="vendorcatalogsearch-products"/>
+        <referenceBlock name="navigation.sections" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Ced\CustomSearchWork\Block\Result" name="vendorcatalogsearch_search_result" template="Ced_CustomSearchWork::result.phtml">
+                <block class="Ced\CustomSearchWork\Block\Result\ListVendor" name="vendorcatalogsearch_search_result_listvendor" template="Ced_CustomSearchWork::result/listvendor.phtml"/>
+                <block class="Magento\CatalogSearch\Block\SearchResult\ListProduct" name="vendorcatalogsearch_search_result_listproduct" template="Ced_CustomSearchWork::result/listproduct.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Ced\CustomSearchWork\ViewModel\Data</argument>
+                    </arguments>
+                    <block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="Magento_Catalog::product/list/toolbar.phtml">
+                        <block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="setToolbarBlockName">
+                        <argument name="name" xsi:type="string">product_list_toolbar</argument>
+                    </action>
+                </block>
+            </block>
+            <block class="Magento\Framework\View\Element\Template" name="search.search_terms_log" template="Magento_CatalogSearch::search_terms_log.phtml">
+                <arguments>
+                    <argument name="search_terms_log" xsi:type="object">Magento\CatalogSearch\Block\SearchTermsLog</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

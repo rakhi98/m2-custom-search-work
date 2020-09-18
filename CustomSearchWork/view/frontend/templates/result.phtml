@@ -1,0 +1,21 @@
+<div class="search-results-wrapper">
+    <div class="search_result_tabs">
+        <ul class="tab_list">
+      <!--      <li class="<?/*= $block->showProductListHtml() ? 'active' : ''; */?>">
+                <a href="<?/*= $block->getDishesSearchUrl(); */?>">
+                    <i class="fas fa-utensils"></i>
+                    <?/*= $block->escapeHtml(__('Dishes')); */?>
+                </a>
+            </li>-->
+        </ul>
+    </div>
+    <?php if ($block->showProductListHtml()) : ?>
+        <div class="vendor-listing-wrapper">
+            <?= $block->getProductListHtml(); ?>
+        </div>
+    <?php else : ?>
+        <div class="vendor-listing-wrapper">
+            <?= $block->getVendorListHtml(); ?>
+        </div>
+    <?php endif; ?>
+</div>
