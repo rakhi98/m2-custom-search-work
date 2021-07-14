@@ -1,0 +1,29 @@
+name: Magento 2 Coding Standard
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup PHP
+      uses: nanasess/setup-php@master      
+      with:
+        php-version: '7.4'
+
+    - name: Check Composer
+      run: composer 
+
+    - name: Check php version
+      run: php -v      
+
+    - name: clone coding standard repository 
+      run: sudo apt-get install git && git clone https://github.com/magento/magento-coding-standard
+
+    - name: Create Coding Standard
+      run: pwd && ls -l && cd magento-coding-standard && composer update && composer install
+
+    - name: Verify
+      run: cd magento-coding-standard && vendor/bin/phpcs -i && php -v
+
+    - name: Check
+      run: cd .. && ls -l && env && echo $GITHUB_WORKSPACE
+
+    - name: Run Test
+      run: cd magento-coding-standard && vendor/bin/phpcs --standard=Magento2 --error-severity=10 --warning-severity=8 $GITHUB_WORKSPACE
